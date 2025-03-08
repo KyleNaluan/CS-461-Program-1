@@ -62,11 +62,13 @@ public class RouteFinder {
 					System.out.println("Invalid choice! Please select a number between 1 and 6.");
 					continue;
 				}
-				
-				if (route != null && !route.isEmpty()) {
-					Utility.displayResults(cityMap, route, startTown, endTown);
-				} else {
-					System.out.println("No route found between " + startTown + " and " + endTown);
+
+				if (choice != 6) {
+					if (route != null && !route.isEmpty()) {
+						Utility.displayResults(cityMap, route, startTown, endTown);
+					} else {
+						System.out.println("No route found between " + startTown + " and " + endTown);
+					}
 				}
 
 			}
