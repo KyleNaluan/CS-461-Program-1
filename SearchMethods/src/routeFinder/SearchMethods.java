@@ -30,7 +30,7 @@ public class SearchMethods {
 			// Goal check
 			if (currentCity.equals(goal)) {
 				System.out.printf("Search took %.3f ms%n", ((System.nanoTime() - startTime) / 1_000_000.0));
-				
+
 				return path; // Return the path found
 			}
 
@@ -97,63 +97,55 @@ public class SearchMethods {
 	public static List<String> iddfs(HashMap<String, List<String>> adjacencyList, String start, String goal) {
 		long startTime = System.nanoTime();
 		int depth = 0;
-
-		while (true) { // Keep increasing depth until a solution is found
+		while (true) {
 			if (((System.nanoTime() - startTime) / 1_000_000.0) > TIMEOUT_MILLIS) {
 				System.out.println("Time-out: No path found within 10 seconds.");
 				return null;
 			}
-
-			Set<String> visited = new HashSet<>();
-			List<String> result = depthLimitedDFS(adjacencyList, start, goal, depth, visited, new ArrayList<>());
-
+			Set<String> visited = new HashSet<>(); // Track visited nodes for each iteration
+			List<String> path = new ArrayList<>(); // Track the current path
+			List<String> result = depthLimitedDFS(adjacencyList, start, goal, depth, visited, path, startTime);
 			if (result != null) {
 				System.out.printf("Search took %.3f ms%n", ((System.nanoTime() - startTime) / 1_000_000.0));
-				return result; // Goal found, return the path
+				return result; // Return the path if the target is found
 			}
-
-			if (visited.size() == adjacencyList.size()) {
-				return null; // If all nodes have been explored, no solution exists
+			// If the entire graph has been explored and the target is not found, break
+			if (adjacencyList.keySet().stream().allMatch(visited::contains)) {
+				break;
 			}
-
-			depth++; // Increase the depth limit and try again
+			depth++; // Increment depth for the next iteration
 		}
+		return null; // Return null if the target is not found
 	}
 
 	private static List<String> depthLimitedDFS(HashMap<String, List<String>> adjacencyList, String current, String goal,
-			int depth, Set<String> visited, List<String> path) {
-		long startTime = System.nanoTime();
+			int depth, Set<String> visited, List<String> path, long startTime) {
 		if (((System.nanoTime() - startTime) / 1_000_000.0) > TIMEOUT_MILLIS) {
+			System.out.println("Time-out: No path found within 10 seconds.");
 			return null;
 		}
-		// Add current city to path
-		path.add(current);
-		visited.add(current);
-
-		// Goal check
-		if (current.equals(goal)) {
-			return new ArrayList<>(path);
+		if (depth == 0 && current.equals(goal)) {
+			path.add(current); // Add the target node to the path
+			return path; // Return the path if the target is found
 		}
+		if (depth > 0) {
+			visited.add(current); // Mark the current node as visited
+			path.add(current); // Add the current node to the path
 
-		// Depth limit reached
-		if (depth == 0) {
-			path.remove(path.size() - 1); // Backtrack
-			return null;
-		}
-
-		// Expand neighbors
-		for (String neighbor : adjacencyList.getOrDefault(current, new ArrayList<>())) {
-			if (!visited.contains(neighbor)) {
-				List<String> result = depthLimitedDFS(adjacencyList, neighbor, goal, depth - 1, visited, path);
-				if (result != null) {
-					return result; // Goal found in deeper search
+			for (String neighbor : adjacencyList.getOrDefault(current, new ArrayList<>())) {
+				if (!visited.contains(neighbor)) {
+					List<String> result = depthLimitedDFS(adjacencyList, neighbor, goal, depth - 1, visited,
+							new ArrayList<>(path), startTime);
+					if (result != null) {
+						return result; // Return the path if the target is found in the subtree
+					}
 				}
 			}
-		}
 
-		// Backtrack
-		path.remove(path.size() - 1);
-		return null;
+			visited.remove(current); // Backtrack: unmark the current node
+			path.remove(path.size() - 1); // Backtrack: remove the current node from the path
+		}
+		return null; // Return null if the target is not found at this depth
 	}
 
 	public static List<String> bestFirstSearch(HashMap<String, List<String>> adjacencyList,
