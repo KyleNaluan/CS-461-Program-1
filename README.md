@@ -47,8 +47,14 @@
 *After testing the functionality of the program and outputting distance, I noticed the distance in km was very low*
 
 14. The total route distance for each route doesn't make sense. I think the euclidean distance method is a little off. The total route distances end up only being a few km (<10). Do you know what the issue is?
-    - GPT explained that the degrees needed to be converted to km before calculating the distance. It also explained how longitude degrees varied by which latitude they were at and provided a formula to adjust them.
-    - After explaining, GPT provided an updated euclideanDistance method that took km and longitude variation into account.
+    - GPT explained that the degrees needed to be converted to km before calculating the distance. It also explained how longitude degrees varied by which latitude they were at and provided a formula to adjust them
+    - After explaining, GPT provided an updated euclideanDistance method that took km and longitude variation into account
+   
+15. I would like to add a way to track the time that each method takes to run, as well as a timeout if the search takes 10 seconds or more to complete. *Copied and pasted search methods into GPT*
+    - GPT added a global variable to represent the max timeout duration
+    - Tracked time in milliseconds, I found this to not be precise enough, so I changed the tracked time into nanoseconds, then divided by 1,000,000 to get milliseconds
+    - This change from GPT displayed a message if the search timed out and returned null for the path
+    - If a path was found, then the total search time was displayed before returning the path
    
 # Overall, I found ChatGPT 4o to perform these tasks very well. Since these are very well known algorithms, it had little problems with implementing them quickly. I only had a few issues with the code it generated, and making manual tweaks was relatively easy.
 
