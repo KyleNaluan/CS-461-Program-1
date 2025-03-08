@@ -20,7 +20,6 @@ public class Utility {
 					cityMap.put(cityName, new double[] { latitude, longitude });
 				}
 			}
-			System.out.println("Loaded " + cityMap.size() + " cities.");
 		} catch (IOException e) {
 			System.err.println("Error loading cities: " + e.getMessage());
 		}
@@ -47,7 +46,6 @@ public class Utility {
 					adjacencyList.get(city2).add(city1);
 				}
 			}
-			System.out.println("Loaded " + adjacencyList.size() + " city connections.");
 		} catch (IOException e) {
 			System.err.println("Error loading adjacencies: " + e.getMessage());
 		}
