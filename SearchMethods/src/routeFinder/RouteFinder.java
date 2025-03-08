@@ -10,7 +10,7 @@ public class RouteFinder {
 
 		Scanner input = new Scanner(System.in);
 		String startTown, endTown, runAgain;
-		boolean cityExists, runSearches;
+		boolean runSearches;
 
 		System.out.println("Welcome to the Route Finder!");
 
